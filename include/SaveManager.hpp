@@ -16,27 +16,21 @@ public:
         return _instance;
     }
 
-    // --- Sound Enabled ---
     void setSoundEnabled(bool enabled);
     bool getSoundEnabled() const;
 
-    // --- Tank Color ---
     void setTankColor(const QColor& color);
     QColor getTankColor() const;
 
-    // --- High Score ---
     void setHighScore(int score);
     int getHighScore() const;
 
-    // --- Music Volume ---
     void setMusicVolume(int volume);
     int getMusicVolume() const;
 
-    // --- SFX Volume ---
     void setSfxVolume(int volume);
     int getSfxVolume() const;
 
-    // --- Save/Load Settings ---
     void saveSettings();
     void loadSettings();
 
