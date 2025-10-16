@@ -1,93 +1,94 @@
-name: Build Qt C++ App (Cross-platform)
+name: Build Qt C++ App (All Platforms)
 
-# Déclenche le workflow seulement si des fichiers sources ou CMake changent
 on:
   push:
-    branches: [ "master", "main" ]
-    paths:
-      - "src/**"
-      - "include/**"
-      - "CMakeLists.txt"
+    branches: [ "master" ]
   pull_request:
-    branches: [ "master", "main" ]
-    paths:
-      - "src/**"
-      - "include/**"
-      - "CMakeLists.txt"
-  workflow_dispatch:  # permet de lancer manuellement
+    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
-  build-linux:
-    name: Build on Linux
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          version: '6.6.2'
-          host: 'linux'
-
-      - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja"
-
-      - name: Build
-        run: cmake --build build
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: linux-build
-          path: build/
-
   build-windows:
-    name: Build on Windows
-    runs-on: windows-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+    name: Build Windows
+    runs-on: windows-2025
 
-      - name: Install Qt
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Qt
         uses: jurplel/install-qt-action@v2
         with:
-          version: '6.6.2'
-          host: 'windows'
+          version: 6.7.3
+          host: win64
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja"
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_PREFIX_PATH="%QT_DIR%" -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build --config Release
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-build
           path: build/
 
-  build-macos:
-    name: Build on macOS
-    runs-on: macos-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-22.04
 
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          version: '6.6.2'
-          host: 'mac'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y qt6-base-dev qt6-tools-dev cmake ninja-build build-essential
 
       - name: Configure CMake
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -G "Ninja"
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
-        run: cmake --build build
+        run: cmake --build build --config Release
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: build/
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        run: |
+          brew update
+          brew install qt@6 cmake ninja
+
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Ninja" -DCMAKE_PREFIX_PATH="/usr/local/opt/qt@6" -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: macos-build
           path: build/
