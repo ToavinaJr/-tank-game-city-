@@ -1,4 +1,3 @@
-// HUDWidget.cpp
 #include "../include/HUDWidget.hpp"
 #include "../include/Constants.hpp"
 #include <QVBoxLayout>

@@ -1,26 +1,23 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#include "MenuWidget.hpp"
+#include "GameWidget.hpp"
+#include "GameEngine.hpp"
 #include <QMainWindow>
-
-// Utilisez le mot-clé Q_OBJECT si vous avez des slots/signals
-QT_BEGIN_NAMESPACE
-namespace Ui { class MainWindow; }
-QT_END_NAMESPACE
+#include <QStackedWidget>
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT // Macro nécessaire pour les fonctionnalités MOC (slots/signals/propriétés)
+    Q_OBJECT
 
 public:
-    // Constructeur : le parent est nullptr pour la fenêtre de niveau supérieur
-    MainWindow(QWidget *parent = nullptr){}
-    // Destructeur
-    ~MainWindow(){}
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow() = default;
 
+private slots:
+    void onStartGame();      // SLOT pour démarrer le jeu
+    void onOpenSettings();
 private:
-    // Pointeur pour gérer l'UI générée par Qt Designer (.ui)
-    Ui::MainWindow *ui;
+    QStackedWidget* m_stack = nullptr;
+    MenuWidget* m_menu = nullptr;
+    GameWidget* m_gameScene = nullptr; // Widget de jeu réel
+    GameEngine* m_gameEngine = nullptr; // Logique du jeu
 };
-
-#endif // MAINWINDOW_H

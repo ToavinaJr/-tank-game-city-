@@ -1,73 +1,51 @@
-// SaveManager.h
-#ifndef SAVEMANAGER_H
-#define SAVEMANAGER_H
+#ifndef SAVEMANAGER_HPP
+#define SAVEMANAGER_HPP
 
-#include <QSettings>
-#include <QString>
+#include <QObject>
 #include <QColor>
+#include <QSettings>
 
-class SaveManager {
+class SaveManager : public QObject
+{
+    Q_OBJECT
+
 public:
-    static SaveManager& instance() {
-        static SaveManager manager;
-        return manager;
+    static SaveManager& instance()
+    {
+        static SaveManager _instance;
+        return _instance;
     }
-    
-    void saveSettings();
-    void loadSettings();
-    
+
+    // --- Sound Enabled ---
     void setSoundEnabled(bool enabled);
     bool getSoundEnabled() const;
-    
+
+    // --- Tank Color ---
     void setTankColor(const QColor& color);
     QColor getTankColor() const;
-    
+
+    // --- High Score ---
     void setHighScore(int score);
     int getHighScore() const;
-    
+
+    // --- Music Volume ---
     void setMusicVolume(int volume);
     int getMusicVolume() const;
-    
+
+    // --- SFX Volume ---
     void setSfxVolume(int volume);
     int getSfxVolume() const;
-    
+
+    // --- Save/Load Settings ---
+    void saveSettings();
+    void loadSettings();
+
 private:
-    SaveManager();
+    explicit SaveManager(QObject* parent = nullptr);
+    SaveManager(const SaveManager&) = delete;
+    SaveManager& operator=(const SaveManager&) = delete;
+
     QSettings m_settings;
 };
 
-#endif // SAVEMANAGER_H
-
-// SoundManager.h
-#ifndef SOUNDMANAGER_H
-#define SOUNDMANAGER_H
-
-#include <QObject>
-#include <QSoundEffect>
-#include <QHash>
-#include <QString>
-
-class SoundManager : public QObject {
-    Q_OBJECT
-    
-public:
-    static SoundManager& instance() {
-        static SoundManager manager;
-        return manager;
-    }
-    
-    void initialize();
-    void playSound(const QString& soundName);
-    void setEnabled(bool enabled);
-    void setVolume(int volume);
-    
-private:
-    SoundManager(QObject* parent = nullptr);
-    void loadSounds();
-    
-    bool m_enabled;
-    int m_volume;
-    QHash<QString, QSoundEffect*> m_sounds;
-};
-
-#endif // SOUNDMANAGER_H
+#endif // SAVEMANAGER_HPP

@@ -9,7 +9,6 @@ GameWidget::GameWidget(GameEngine* engine, QWidget* parent)
 {
     setFixedSize(GameConstants::GAME_AREA_WIDTH, GameConstants::GAME_AREA_HEIGHT);
     setFocusPolicy(Qt::StrongFocus);
-    setAttribute(Qt::WA_OpaquePainting);
 }
 
 void GameWidget::paintEvent(QPaintEvent* event) {

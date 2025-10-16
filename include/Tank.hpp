@@ -2,6 +2,7 @@
 #define TANK_H
 
 #include "Entity.hpp"
+#include "Constants.hpp"
 #include <QKeyEvent>
 
 class Tank : public Entity {

@@ -5,11 +5,11 @@
 #include <QTimer>
 #include <memory>
 #include <vector>
-#include "../include/Tank.hpp"
-#include "../include/Enemy.hpp"
-#include "../include/Bullet.hpp"
-#include "../include/Block.hpp"
-#include "../include/PowerUp.hpp"
+#include "Tank.hpp"
+#include "Enemy.hpp"
+#include "Bullet.hpp"
+#include "Block.hpp"
+#include "PowerUp.hpp"
 
 enum class GameState {
     MENU,
@@ -18,6 +18,8 @@ enum class GameState {
     GAME_OVER,
     LEVEL_COMPLETE
 };
+
+class Bullet;
 
 class GameEngine : public QObject {
     Q_OBJECT

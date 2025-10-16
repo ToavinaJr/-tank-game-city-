@@ -47,7 +47,7 @@ void GameEngine::initializeLevel() {
     m_powerUps.clear();
     
     // Create player
-    QPointF playerStart(GameConstants::GAME_AREA_WIDTH / 2 - 16, 
+    QPointF playerStart( 16,
                         GameConstants::GAME_AREA_HEIGHT - 50);
     m_player = std::make_unique<Tank>(playerStart, EntityType::PLAYER_TANK,
                                       GameConfig::instance().getTankColor(),

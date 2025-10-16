@@ -1,42 +1,40 @@
-# Utiliser une version de CMake supportant Qt 6 (>= 3.16)
+# --- Version minimale de CMake ---
 cmake_minimum_required(VERSION 3.16)
-project(TankBattleGame VERSION 1.0.0 LANGUAGES CXX)
 
-# --- Configuration C++ Standard ---
+# --- Nom du projet ---
+project(TankBattleGame VERSION 1.0 LANGUAGES CXX)
+
+# --- Version du standard C++ ---
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)       # Active la génération automatique des fichiers MOC (Q_OBJECT)
+set(CMAKE_AUTORCC ON)       # Active la compilation automatique des fichiers .qrc
+set(CMAKE_AUTOUIC ON)       # Active la compilation automatique des fichiers .ui
 
-# --- Activation des outils Qt (MOC, RCC, UIC) ---
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-
-# --- Trouver le paquet Qt 6 ---
-# L'inclusion des composants charge les macros nécessaires comme qt_add_executable
+# --- Trouver les modules Qt nécessaires ---
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
 
-# --- Définition des chemins absolus (Corrigé) ---
-# NOTE: CMAKE_CURRENT_SOURCE_DIR est la variable native de CMake, pas besoin de la redéfinir.
+# --- Dossiers sources et includes ---
 set(PROJECT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(HEADERS
-    ${PROJECT_SOURCE_DIR}/include/Constants.h
-    ${PROJECT_SOURCE_DIR}/include/GameConfig.h
-    ${PROJECT_SOURCE_DIR}/include/Entity.h
-    ${PROJECT_SOURCE_DIR}/include/Tank.h
-    ${PROJECT_SOURCE_DIR}/include/Block.h
-    ${PROJECT_SOURCE_DIR}/include/Bullet.h
-    ${PROJECT_SOURCE_DIR}/include/PowerUp.h
-    ${PROJECT_SOURCE_DIR}/include/Enemy.h
-    ${PROJECT_SOURCE_DIR}/include/GameScene.h
-    ${PROJECT_SOURCE_DIR}/include/GameEngine.h
-    ${PROJECT_SOURCE_DIR}/include/MainWindow.h
-    ${PROJECT_SOURCE_DIR}/include/MenuWidget.h
-    ${PROJECT_SOURCE_DIR}/include/SettingsWidget.h
-    ${PROJECT_SOURCE_DIR}/include/GameWidget.h
-    ${PROJECT_SOURCE_DIR}/include/HUDWidget.h
-    ${PROJECT_SOURCE_DIR}/include/SoundManager.h
-    ${PROJECT_SOURCE_DIR}/include/SaveManager.h
+    ${PROJECT_SOURCE_DIR}/include/Constants.hpp
+    ${PROJECT_SOURCE_DIR}/include/GameConfig.hpp
+    ${PROJECT_SOURCE_DIR}/include/Entity.hpp
+    ${PROJECT_SOURCE_DIR}/include/Tank.hpp
+    ${PROJECT_SOURCE_DIR}/include/Block.hpp
+    ${PROJECT_SOURCE_DIR}/include/Bullet.hpp
+    ${PROJECT_SOURCE_DIR}/include/PowerUp.hpp
+    ${PROJECT_SOURCE_DIR}/include/Enemy.hpp
+    ${PROJECT_SOURCE_DIR}/include/GameScene.hpp
+    ${PROJECT_SOURCE_DIR}/include/GameEngine.hpp
+    ${PROJECT_SOURCE_DIR}/include/MainWindow.hpp
+    ${PROJECT_SOURCE_DIR}/include/MenuWidget.hpp
+    ${PROJECT_SOURCE_DIR}/include/SettingsWidget.hpp
+    ${PROJECT_SOURCE_DIR}/include/GameWidget.hpp
+    ${PROJECT_SOURCE_DIR}/include/HUDWidget.hpp
+    ${PROJECT_SOURCE_DIR}/include/SoundManager.hpp
+    ${PROJECT_SOURCE_DIR}/include/SaveManager.hpp
 )
 
 set(SOURCES
@@ -62,20 +60,19 @@ set(RESOURCES
     ${PROJECT_SOURCE_DIR}/resources/resources.qrc
 )
 
-# --- Exécutable ---
-# Utiliser qt_add_executable (la macro est maintenant définie grâce à find_package)
-# Ne pas inclure ${HEADERS} ici.
+# --- Création de l’exécutable ---
 qt_add_executable(${PROJECT_NAME}
     ${SOURCES}
+    ${HEADERS}
     ${RESOURCES}
 )
 
-# --- Dossiers d'inclusion ---
+# --- Inclure les fichiers d'en-tête ---
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${PROJECT_SOURCE_DIR}/include
 )
 
-# --- Liaison des bibliothèques (Targets Qt 6) ---
+# --- Lier les modules Qt ---
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Core
     Qt6::Gui
@@ -83,11 +80,16 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Multimedia
 )
 
-# --- Propriétés de l'exécutable et Installation ---
+# --- Propriétés du binaire Windows ---
 set_target_properties(${PROJECT_NAME} PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
+# --- Installation (optionnelle) ---
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
 )
+
+# --- Option de debug (affiche ce que MOC génère) ---
+message(STATUS "CMake automoc: ${CMAKE_AUTOMOC}")
+message(STATUS "Qt6 version: ${Qt6Core_VERSION}")

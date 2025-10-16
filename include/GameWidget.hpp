@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QPainter>
 #include <QKeyEvent>
-#include "GameEngine.h"
+#include "GameEngine.hpp"
 
 class GameWidget : public QWidget {
     Q_OBJECT

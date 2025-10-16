@@ -1,44 +1,51 @@
-// SaveManager.cpp
+#include "../include/SoundManager.hpp"
 #include "../include/SaveManager.hpp"
-#include "../include/Constants.hpp"
-#include "../include/GameConfig.hpp"
+#include <QSoundEffect>
+#include <QUrl>
 
-SaveManager::SaveManager()
-    : m_settings("TankBattleGame", "TankBattle")
+SoundManager::SoundManager(QObject* parent)
+    : QObject(parent), m_enabled(true), m_volume(50)
 {
-    loadSettings();
+    loadSounds();
 }
 
-void SaveManager::saveSettings() {
-    auto& config = GameConfig::instance();
-    
-    m_settings.setValue(GameConstants::SETTING_SOUND_ENABLED, config.isSoundEnabled());
-    m_settings.setValue(GameConstants::SETTING_TANK_COLOR, config.getTankColor().name());
-    m_settings.setValue(GameConstants::SETTING_HIGH_SCORE, config.getHighScore());
-    m_settings.setValue(GameConstants::SETTING_MUSIC_VOLUME, config.getMusicVolume());
-    m_settings.setValue(GameConstants::SETTING_SFX_VOLUME, config.getSfxVolume());
-    
-    m_settings.sync();
+void SoundManager::initialize() {
+    m_enabled = SaveManager::instance().getSoundEnabled();
+    m_volume = SaveManager::instance().getSfxVolume();
+
+    for (auto sound : m_sounds)
+        sound->setVolume(m_enabled ? m_volume / 100.0f : 0.0f);
 }
 
-void GameEngine::loadSettings() {
-    auto& config = GameConfig::instance();
-    
-    config.setSoundEnabled(
-        m_settings.value(GameConstants::SETTING_SOUND_ENABLED, true).toBool()
-    );
-    
-    config.setTankColor(
-        QColor(m_settings.value(GameConstants::SETTING_TANK_COLOR, 
-                               Colors::PLAYER_TANK_DEFAULT).toString())
-    );
-    
-    config.setHighScore(
-        m_settings.value(GameConstants::SETTING_HIGH_SCORE, 0).toInt()
-    );
-    
-    config.setMusicVolume(
-        m_settings.value(GameConstants::SETTING_MUSIC_VOLUME, 50).toInt()
-    );
-    
-    config.setSfxVolume(
+void SoundManager::loadSounds() {
+    QStringList soundNames = {"shoot", "explosion", "powerup"};
+
+    for (const QString& name : soundNames) {
+        QSoundEffect* effect = new QSoundEffect(this);
+        effect->setSource(QUrl::fromLocalFile(":/sounds/" + name + ".wav"));
+        effect->setVolume(m_volume / 100.0f);
+        m_sounds.insert(name, effect);
+    }
+}
+
+void SoundManager::playSound(const QString& soundName) {
+    if (!m_enabled) return;
+    if (m_sounds.contains(soundName)) {
+        m_sounds[soundName]->stop();
+        m_sounds[soundName]->play();
+    }
+}
+
+void SoundManager::setEnabled(bool enabled) {
+    m_enabled = enabled;
+    SaveManager::instance().setSoundEnabled(enabled);
+    for (auto sound : m_sounds)
+        sound->setVolume(enabled ? m_volume / 100.0f : 0.0f);
+}
+
+void SoundManager::setVolume(int volume) {
+    m_volume = volume;
+    SaveManager::instance().setSfxVolume(volume);
+    for (auto sound : m_sounds)
+        sound->setVolume(m_enabled ? m_volume / 100.0f : 0.0f);
+}

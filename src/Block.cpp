@@ -1,5 +1,5 @@
-#include "Block.h"
-#include "Constants.h"
+#include "../include/Block.hpp"
+#include "../include/Constants.hpp"
 #include <QPainter>
 
 Block::Block(const QPointF& position, BlockType blockType)
