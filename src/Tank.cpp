@@ -1,8 +1,7 @@
 #include "../include/Tank.hpp"
 #include <QPainter>
-#include <cmath> // pour std::abs
+#include <cmath>
 
-// --- 1. Constructeur ---
 Tank::Tank(const QPointF& position, EntityType type, const QColor& color, int speed)
     : Entity(QRectF(position.x(), position.y(), TANK_SIZE, TANK_SIZE), type, color),
     m_direction(Direction::UP),
@@ -19,16 +18,14 @@ Tank::Tank(const QPointF& position, EntityType type, const QColor& color, int sp
     // rien à ajouter, tout est bien initialisé
 }
 
-// --- 2. Méthodes Virtuelles (Overridden) ---
+
 void Tank::update()
 {
-    // Déplacement selon les directions actives
     if (m_movingUp)    m_rect.translate(0, -m_speed);
     if (m_movingDown)  m_rect.translate(0,  m_speed);
     if (m_movingLeft)  m_rect.translate(-m_speed, 0);
     if (m_movingRight) m_rect.translate( m_speed, 0);
 
-    // Gestion du bouclier
     if (m_shieldActive && m_shieldTimer > 0) {
         m_shieldTimer--;
         if (m_shieldTimer <= 0)
@@ -91,7 +88,7 @@ void Tank::render(QPainter& painter)
     }
 }
 
-// --- 3. Méthodes de Mouvement ---
+
 void Tank::move(Direction dir)
 {
     // Mettre à jour la direction
@@ -106,9 +103,9 @@ void Tank::move(Direction dir)
     }
 }
 
+
 void Tank::setMoving(Direction dir, bool moving)
 {
-    // Met à jour le mouvement continu et la direction du canon
     if (moving)
         m_direction = dir;
 
@@ -120,7 +117,7 @@ void Tank::setMoving(Direction dir, bool moving)
     }
 }
 
-// --- 4. Santé / Dégâts ---
+
 void Tank::takeDamage(int damage)
 {
     if (!m_shieldActive) {
@@ -133,22 +130,21 @@ void Tank::takeDamage(int damage)
 void Tank::heal(int amount)
 {
     m_health += std::abs(amount);
-    // Si tu veux limiter la vie maximale :
-    // m_health = std::min(m_health, MAX_HEALTH);
 }
 
-// --- 5. Bouclier ---
+
 void Tank::activateShield(int duration)
 {
     m_shieldActive = true;
-    m_shieldTimer = duration; // durée en frames
+    m_shieldTimer = duration;
 }
 
-// --- 6. Tir ---
+
 bool Tank::canShoot() const
 {
     return m_shootCooldown <= 0;
 }
+
 
 void Tank::resetShootCooldown()
 {
