@@ -1,4 +1,3 @@
-// HUDWidget.h
 #ifndef HUDWIDGET_H
 #define HUDWIDGET_H
 
