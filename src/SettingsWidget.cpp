@@ -1,6 +1,5 @@
 #include "../include/SettingsWidget.hpp"
 #include "../include/SaveManager.hpp"
-#include "../include/Constants.hpp"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGroupBox>

@@ -1,4 +1,3 @@
-// Enemy.cpp
 #include "../include/Enemy.hpp"
 #include "../include/Constants.hpp"
 #include <QRandomGenerator>

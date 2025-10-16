@@ -18,7 +18,8 @@ void Bullet::update() {
 
     QPointF pos = getPosition();
 
-    switch (m_direction) {
+    switch (m_direction)
+    {
         case Direction::UP:    pos.ry() -= m_speed; break;
         case Direction::DOWN:  pos.ry() += m_speed; break;
         case Direction::LEFT:  pos.rx() -= m_speed; break;
