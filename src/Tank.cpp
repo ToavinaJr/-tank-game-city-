@@ -145,8 +145,7 @@ bool Tank::canShoot() const
     return m_shootCooldown <= 0;
 }
 
-
-void Tank::resetShootCooldown()
+ void Tank::resetShootCooldown()
 {
     m_shootCooldown = SHOOT_COOLDOWN_MAX;
 }

@@ -1,4 +1,3 @@
-// SettingsWidget.h
 #ifndef SETTINGSWIDGET_H
 #define SETTINGSWIDGET_H
 

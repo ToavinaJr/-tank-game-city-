@@ -7,9 +7,16 @@ project(TankBattleGame VERSION 1.0 LANGUAGES CXX)
 # --- Version du standard C++ ---
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)       # Active la génération automatique des fichiers MOC (Q_OBJECT)
-set(CMAKE_AUTORCC ON)       # Active la compilation automatique des fichiers .qrc
-set(CMAKE_AUTOUIC ON)       # Active la compilation automatique des fichiers .ui
+set(CMAKE_AUTOMOC ON)       # Génération automatique des fichiers MOC (Q_OBJECT)
+set(CMAKE_AUTORCC ON)       # Compilation automatique des fichiers .qrc
+set(CMAKE_AUTOUIC ON)       # Compilation automatique des fichiers .ui
+
+# --- Gestion du chemin Qt si variable d'environnement définie ---
+if(NOT Qt6_DIR)
+    if(DEFINED ENV{QT_DIR})
+        set(Qt6_DIR "$ENV{QT_DIR}/lib/cmake/Qt6")
+    endif()
+endif()
 
 # --- Trouver les modules Qt nécessaires ---
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Multimedia)
@@ -80,16 +87,19 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt6::Multimedia
 )
 
-# --- Propriétés du binaire Windows ---
-set_target_properties(${PROJECT_NAME} PROPERTIES
-    WIN32_EXECUTABLE TRUE
-)
+# --- Propriétés spécifiques Windows ---
+if(WIN32)
+    set_target_properties(${PROJECT_NAME} PROPERTIES
+        WIN32_EXECUTABLE TRUE
+    )
+endif()
 
 # --- Installation (optionnelle) ---
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
 )
 
-# --- Option de debug (affiche ce que MOC génère) ---
+# --- Option de debug ---
 message(STATUS "CMake automoc: ${CMAKE_AUTOMOC}")
 message(STATUS "Qt6 version: ${Qt6Core_VERSION}")
+message(STATUS "Qt6_DIR: ${Qt6_DIR}")
