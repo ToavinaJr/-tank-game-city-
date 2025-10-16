@@ -10,7 +10,7 @@ on:
 jobs:
   build-windows:
     name: Build on Windows
-    runs-on: windows-latest
+    runs-on: windows-2025
     env:
       QT_VERSION: 6.6.0
       QT_DIR: C:\Qt\6.6.0\msvc_64
@@ -19,14 +19,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      # Installer Visual Studio avec MSBuild
-      - name: Setup Visual Studio
-        uses: microsoft/setup-vs@v1
+      # Installer MSBuild (Visual Studio)
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
         with:
-          vs-version: '17'
-          include-components: 'Microsoft.VisualStudio.Component.VC.Tools.x86.x64,Microsoft.VisualStudio.Component.Windows10SDK.19041'
+          vs-version: '17.7'          # dernière version de VS2022
+          msbuild-architecture: x64
 
-      # Installer Qt
+      # Installer Qt avec Multimedia
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
@@ -42,8 +42,7 @@ jobs:
           cmake .. -G "Visual Studio 17 2022" -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}"
 
       - name: Build with MSBuild
-        run: |
-          cmake --build build --config Release
+        run: cmake --build build --config Release
 
   build-linux:
     name: Build on Linux
@@ -58,9 +57,12 @@ jobs:
 
       # Installer dépendances Linux pour Multimedia
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y build-essential cmake libpulse-dev libasound2-dev libglu1-mesa-dev libvulkan-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential cmake libpulse-dev libasound2-dev libglu1-mesa-dev libvulkan-dev
 
-      # Installer Qt
+      # Installer Qt avec Multimedia
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
         with:
@@ -73,20 +75,25 @@ jobs:
         run: |
           mkdir -p build
           cd build
-          cmake .. -DCMAKE_PREFIX_PATH=${{ env.QT_DIR }} -DCMAKE_BUILD_TYPE=Release -DQT_DEBUG_FIND_PACKAGE=ON
+          cmake .. \
+            -DCMAKE_PREFIX_PATH=${{ env.QT_DIR }} \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DQT_DEBUG_FIND_PACKAGE=ON
 
       - name: Build
         run: cmake --build build --config Release
 
   build-macos:
-    name: Build macOS
+    name: Build on macOS
     runs-on: macos-latest
+    env:
+      QT_DIR: /usr/local/opt/qt@6
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Qt
+      - name: Install Qt and tools
         run: |
           brew update
           brew install qt@6 cmake ninja
@@ -95,7 +102,7 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake .. -G "Ninja" -DCMAKE_PREFIX_PATH="/usr/local/opt/qt@6" -DCMAKE_BUILD_TYPE=Release
+          cmake .. -G "Ninja" -DCMAKE_PREFIX_PATH="${{ env.QT_DIR }}" -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build --config Release
