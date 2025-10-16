@@ -1,0 +1,19 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/">
+        <file>styles/main.qss</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <!-- Add sound files here when available -->
+        <!-- <file>sounds/player_shoot.wav</file> -->
+        <!-- <file>sounds/enemy_shoot.wav</file> -->
+        <!-- <file>sounds/enemy_spawn.wav</file> -->
+        <!-- <file>sounds/enemy_destroyed.wav</file> -->
+        <!-- <file>sounds/player_hit.wav</file> -->
+        <!-- <file>sounds/block_destroyed.wav</file> -->
+        <!-- <file>sounds/base_destroyed.wav</file> -->
+        <!-- <file>sounds/powerup_health.wav</file> -->
+        <!-- <file>sounds/powerup_bomb.wav</file> -->
+        <!-- <file>sounds/powerup_shield.wav</file> -->
+    </qresource>
+</RCC>
